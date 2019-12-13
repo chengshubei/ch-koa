@@ -9,7 +9,7 @@ module.exports = (app, config) => {
         Log.level = 'debug';
         global.Log = Log;
         app.use((ctx, next) => {
-            ctx.Log = new Logger(ctx.path);
+            ctx.Log = log4js.getLogger(ctx.path);
             return next();
         });
     } else {

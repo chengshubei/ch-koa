@@ -14,8 +14,7 @@ module.exports = (app, config) => {
     const fls = fs.readdirSync(routePath);
     for (let v of fls) {
         if (v.slice(-3) !== '.js') continue;
-        let file = path.join(routePath, fileName);
-        let route = require(file);
+        let route = require(path.join(routePath, v));
         let prefix = route.prefix || '';
         for (let r of route.routes) {
             let rp = `/${pubPrefix}/${prefix}/${r.path}`;

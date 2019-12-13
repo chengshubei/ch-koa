@@ -47,75 +47,76 @@ chKoa(config);
 ```
 
 ## Basic Usage
-框架提供丰富而实用的配置, 除端口和项目根目录外, 都提供了方便的默认选项, 见上例。
-为了增强易用性, 框架以config.path为基础, 强制固定了部分的目录结构
-    - routes 强制路由目录
-    - logs   强制日志目录
-    - middlewares 强制中间件目录
-    - public 强制静态文件目录
-    - message 强制状态码目录
-controller, config等的代码和目录结构没有限制, 可完全自由定义。
-框架支持在一个项目工程中创建多个服务进程, 通过设置subpath来划分目录, 适合共用数据库和部门逻辑的小型项目或微服务,建议目录如下:
+框架提供丰富而实用的配置, 除端口和项目根目录外, 都提供了方便的默认选项, 见上例。  
+为了增强易用性, 框架以config.path为基础, 强制固定了部分的目录结构  
+    - routes 强制路由目录  
+    - logs   强制日志目录  
+    - middlewares 强制中间件目录  
+    - public 强制静态文件目录  
+    - message 强制状态码目录  
+controller, config等的代码和目录结构没有限制, 可完全自由定义。  
+框架支持在一个项目工程中创建多个服务进程, 通过设置subpath来划分目录, 适合共用数据库和部门逻辑的小型项目或微服务,建议目录如下:  
 
 #### 单应用工程目录建议 (subpath: null)
-├─bin
-|   application
-├─config
-|   application.js
-├─controllers
-|   logic1.js
-|   logic2.js
-├─message
-|   en.js
-|   zh-CN.js
-├─middlewares
-|   token.js
-├─models
-|   user.js
-├─routes
-|   user.js
-└─logs
-    app.log
+├─bin  
+|   application  
+├─config  
+|   application.js  
+├─controllers  
+|   logic1.js  
+|   logic2.js  
+├─message  
+|   en.js  
+|   zh-CN.js  
+├─middlewares  
+|   token.js  
+├─models  
+|   user.js  
+├─routes  
+|   user.js  
+└─logs  
+    app.log  
 
 #### 多应用工程目录建议 (subpath: application/manager)
-├─bin
-|   application
-│   manager
-├─config
-|   application.js
-|   manager.js
-├─controllers
-│  ├─application
-|  |    logic1.js
-|  |    logic2.js
-│  └─manager
-|       logic1.js
-|       logic2.js
-├─message
-│  ├─application
-|  |    en.js
-|  |    zh-CN.js
-│  └─manager
-|       en.js
-|       zh-CN.js
-├─middlewares
-│  ├─application
-│  └─manager
-├─models
-|   user.js
-├─routes
-│  ├─application
-|  |    token.js
-│  └─manager
-|       permission.js  
-└─logs
-  ├─application
-  |     app.log
-  └─manager
-        manager.log
+├─bin  
+|   application  
+│   manager  
+├─config  
+|   application.js  
+|   manager.js  
+├─controllers  
+│  ├─application  
+|  |    logic1.js  
+|  |    logic2.js  
+│  └─manager  
+|       logic1.js  
+|       logic2.js  
+├─message  
+│  ├─application  
+|  |    en.js  
+|  |    zh-CN.js  
+│  └─manager  
+|       en.js  
+|       zh-CN.js  
+├─middlewares  
+│  ├─application  
+│  └─manager  
+├─models  
+|   user.js  
+├─routes   
+│  ├─application  
+|  |    token.js  
+│  └─manager  
+|       permission.js   
+└─logs  
+  ├─application  
+  |     app.log  
+  └─manager  
+        manager.log  
 
 #### 友情提示: 
-    项目依赖了自己封装的ch-error和ch-validator模块, 请求参数经过validator过滤和格式化后重新组合对象绑定在ctx上, 建议在controller中使用ctx.attributes来获取参数, 也可以通过koa原始方式获取原始参数值。
+    项目依赖了自己封装的ch-error和ch-validator模块, 请求参数经过validator过滤和格式化后重新组合对象绑定在ctx上。  
+    建议在controller中使用ctx.attributes来获取参数, 也可以通过koa原始方式获取原始参数值。  
 
 # License
 

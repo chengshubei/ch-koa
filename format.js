@@ -11,7 +11,7 @@ function create(statusCode = -1, message, error, data) {
     result.message = message ? String(message) : '';
     result.error = error || '';
     return result;
-};
+}
 function success(data, message) {
     let result = {};
     result.code = 200;
@@ -19,7 +19,7 @@ function success(data, message) {
     result.message = message || 'OK';
     result.error = '';
     return result;
-};
+}
 
 module.exports = (app, config) => {
     app.use(async (ctx, next) => {
