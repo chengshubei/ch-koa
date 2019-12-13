@@ -42,8 +42,8 @@ const config = {
     }]
 }
 
-const chKoa = require('ch-koa');
-chKoa(config);
+const ChKoa = require('ch-koa');
+ChKoa(config);
 ```
 
 ## Basic Usage

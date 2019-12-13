@@ -3,6 +3,24 @@
 const path = require('path');
 const log4js = require('log4js');
 
+class Logger {
+    constructor(category) {
+        this.logger = log4js.getLogger(category);
+        this.errLogger = log4js.getLogger('crash');
+    }
+    info(msg) {
+        this.logger.info(msg);
+    }
+    warn(msg) {
+        this.logger.info(msg);
+    }
+    error(msg) {
+        this.logger.info(msg);
+        //异常的日志, 在file中单独保存一份,永久保存
+        this.errLogger.error(msg);
+    }
+}
+
 module.exports = (app, config) => {
     if (! config.log) {
         let Log = log4js.getLogger('logger');
@@ -57,23 +75,6 @@ module.exports = (app, config) => {
         };
         log4js.configure(options);
 
-        class Logger {
-            constructor(category) {
-                this.logger = log4js.getLogger(category);
-                this.errLogger = log4js.getLogger('crash');
-            }
-            info(msg) {
-                this.logger.info(msg);
-            }
-            warn(msg) {
-                this.logger.info(msg);
-            }
-            error(msg) {
-                this.logger.info(msg);
-                //异常的日志, 在file中单独保存一份,永久保存
-                this.errLogger.error(msg);
-            }
-        }
         let Console = new Logger('server');
         global.Log = Console;
         //保存console日志
