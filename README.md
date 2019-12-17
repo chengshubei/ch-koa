@@ -1,6 +1,6 @@
-# ch-validator
+# ch-koa
 
-基于Koa2的简单易用的web框架, 代码简单易懂, 欢迎提供建议。 
+基于Koa2的简单易用的web框架, 代码简单易懂, 配合ch-validaor和ch-error使用.
 
 ## Installation
 
@@ -8,7 +8,7 @@
 $ npm install ch-koa
 ```
 
-## Example
+## Usage
 
 ```
 const config = {
@@ -56,65 +56,70 @@ ChKoa(config);
 
 
 #### 单应用工程目录建议 (subpath: null)
-├─bin  
-|   application  
-├─config  
-|   application.js  
-├─controllers  
-|   logic1.js  
-|   logic2.js  
-├─message  
-|   en.js  
-|   zh-CN.js  
-├─middlewares  
-|   token.js  
-├─models  
-|   user.js  
-├─routes  
-|   user.js  
-└─logs  
-    app.log  
+```
+├── bin
+│   └── application
+├── config
+│   └── application.js
+├── controllers
+│   └── logic.js
+├── message
+│   └── en.js
+├── middlewares
+│   └── token.js
+├── models
+│   └── user.js
+├── routers
+│   └── user.js
+├── logs
+│   └── app.log
+``` 
 
 #### 多应用工程目录建议 (subpath: application/manager)
-├─bin  
-|   application  
-│   manager  
-├─config  
-|   application.js  
-|   manager.js  
-├─controllers  
-│  ├─application  
-|  |    logic1.js  
-|  |    logic2.js  
-│  └─manager  
-|       logic1.js  
-|       logic2.js  
-├─message  
-│  ├─application  
-|  |    en.js  
-|  |    zh-CN.js  
-│  └─manager  
-|       en.js  
-|       zh-CN.js  
-├─middlewares  
-│  ├─application  
-│  └─manager  
-├─models  
-|   user.js  
-├─routes   
-│  ├─application  
-|  |    token.js  
-│  └─manager  
-|       permission.js   
-└─logs  
-  ├─application  
-  |     app.log  
-  └─manager  
-        manager.log  
+```
+├── bin
+|   ├── application
+│   └── manager
+├── config
+|   ├── application.js
+│   └── manager.js
+├── controllers
+|   ├── application
+│   │   └── logic.js
+│   └── manager
+│       └── logic.js
+├── message
+|   ├── application
+│   │   └── en.js
+│   └── manager
+│       └── en.js
+├── middlewares
+|   ├── application
+│   │   └── token.js
+│   └── manager
+│       └── permission.js
+├── models
+│   └── user.js
+├── routers
+|   ├── application
+│   │   └── user.js
+│   └── manager
+│       └── admin.js
+├── logs
+|   ├── application
+│   │   └── app.log
+│   └── manager
+│       └── manager.log
+```
 
-#### 友情提示: 
+
+#### 友情提示
     项目依赖了自己封装的ch-error和ch-validator模块, 请求参数经过validator过滤和格式化后重新组合对象绑定在ctx上。  
     建议在controller中使用ctx.attributes来获取参数, 也可以通过koa原始方式获取原始参数值。  
+
+## Questions & Suggestions
+
+Please open an issue [here](https://github.com/chengshubei/ch-koa/issues).
 
 # License
 
