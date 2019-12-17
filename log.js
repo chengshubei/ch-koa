@@ -12,7 +12,7 @@ function logCfg(config) {
     if ('log' in config && ! config.log) return defaultCfg;
     let logCfg = config.log || {};
     if (! config.LOG_PATH) config.LOG_PATH = path.join(config.path, 'logs', config.subpath || '');
-    let fileName = config.LOG_PATH + (logCfg.fileName || 'app');
+    let fileName = path.join(config.LOG_PATH, logCfg.fileName || 'app');
     let instanceFlag = '';
     if (process.env.instances && process.env.instances > 1) {
         //PM2集群部署, 日志分开保存
