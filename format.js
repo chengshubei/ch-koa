@@ -1,8 +1,10 @@
 'use strict';
 
 const path = require('path');
+const log4js = require('log4js');
 const {BaseError, SystemError, NotFoundError} = require('ch-error');
 
+const Logger = log4js.getLogger('response');
 function create(statusCode = -1, message, error, data) {
     if (isNaN(Number(statusCode))) throw new SystemError('Status code not a number');
     let result = {};
@@ -27,25 +29,25 @@ module.exports = (app, config) => {
             ctx.body = success();
             await next();
         } catch (e) {
-            const Log = global.Log;
             if (! (e instanceof BaseError)) {
-                Log.error(`${ctx.path} request operate an no-base-error, name: ${e.name}, message: ${e.message}`);
-                Log.error(e.stack);
+                Logger.error(`${ctx.path} request operate an no-base-error, name: ${e.name}, message: ${e.message}`);
+                Logger.error(e.stack);
                 e = new SystemError(e.message || String(e));
             } else if (e instanceof SystemError) {
-                Log.error(`${ctx.path} request operate a system Error: ${e.error}`);
-                Log.error(e.stack);
+                Logger.error(`${ctx.path} request operate a system Error: ${e.error}`);
+                Logger.error(e.stack);
             } else if (e instanceof NotFoundError) {
-                Log.warn(`recv 404 request, path: ${ctx.path}, method: ${ctx.method}`);
+                Logger.warn(`recv 404 request, path: ${ctx.path}, method: ${ctx.method}`);
             }
 
             if (config.i18n && ctx.get('lang') && ctx.get('lang') !== 'zh_CN') {
-                let messagePath = path.join(config.path, 'message', config.subpath || '', ctx.get('lang'));
+                if (! config.MESSAGE_PATH) config.MESSAGE_PATH = path.join(config.path, 'message', config.subpath || '');
+                let messagePath = path.join(config.MESSAGE_PATH, ctx.get('lang'));
                 e.message = require(messagePath)[e.code] || e.message;
             }
             let response = create(e.code, e.message, e.error, e.data);
             if (config.debug) {
-                Log.warn(`*************DEBUG**************** \ntime: ${new Date().toLocaleString()}, ${ctx.url} operate ${ctx.method} request failed \nheader info: ${JSON.stringify(ctx.headers)} \nrequest body info: ${JSON.stringify(ctx.request.body)} \nresponse info: ${JSON.stringify(response)} \nerror name: ${e.name} \n`);
+                Logger.warn(`*************DEBUG**************** \ntime: ${new Date().toLocaleString()}, ${ctx.url} operate ${ctx.method} request failed \nheader info: ${JSON.stringify(ctx.headers)} \nrequest body info: ${JSON.stringify(ctx.request.body)} \nresponse info: ${JSON.stringify(response)} \nerror name: ${e.name} \n`);
             }
             ctx.body = response;
         }

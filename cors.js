@@ -1,34 +1,16 @@
 'use strict';
 
+const assert = require('assert');
+
 module.exports = (config) => {
+    config = config.cors || {};
     return function(ctx, next) {
         ctx.vary('Origin');
         let origin = '*';
         if (config.origin) {
+            assert(typeof config.origin === 'string', 'origin mast be string');
             let clientOrign = ctx.get('Origin');
-            if (! clientOrign) return next();
-            if (typeof config.origin === 'string') {
-                if (config.origin.indexOf('*.') === -1) {
-                    if (config.origin !== clientOrign) return next();
-                } else {
-                    let l = config.origin.split('*.');
-                    for (let v of l) {
-                        if (v && clientOrign.indexOf(v) === -1) return next();
-                    }
-                }
-            }
-            if (Array.isArray(config.origin) && config.origin.length > 0) {
-                for (let v of config.origin) {
-                    if (config.origin.indexOf('*.') === -1) {
-                        if (config.origin !== clientOrign) return next();
-                    } else {
-                        let l = v.split('*.');
-                        for (let vv of l) {
-                            if (vv && clientOrign.indexOf(vv) === -1) return next();
-                        }
-                    }
-                }
-            }
+            if (! clientOrign || config.origin.indexOf(clientOrign) === -1) return next();
             origin = clientOrign;
         }
         // Access-Control-Allow-Origin
