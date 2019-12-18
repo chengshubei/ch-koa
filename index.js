@@ -1,11 +1,9 @@
 'use strict';
 
-const assert = require('assert');
-const fs = require('fs');
-const path = require('path');
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 
+const Config = require('./config');
 const Log = require('./log');
 const Cors = require('./cors');
 const Route = require('./route');
@@ -14,18 +12,13 @@ const Format = require('./format');
 const Middleware = require('./middleware');
 
 module.exports = (config) => {
-    assert(config && Number(config.port) && config.path, 'app config is wrong'); 
+    //检查配置
+    config = Config(config);
     const app = new Koa(config);
-    //配置代理
-    app.proxy = !( 'proxy' in config) || config.proxy;
     //跨域处理
-    if (!( 'cors' in config) || config.cors) app.use(Cors(config));
+    if (config.cors) app.use(Cors(config));
     //文件托管
-    if (config.static) {
-        if (! config.STATIC_PATH) config.STATIC_PATH = path.join(config.path, 'public', config.subpath || '');
-        if (! fs.existsSync(config.STATIC_PATH)) fs.mkdirSync(config.STATIC_PATH, {recursive: true});
-        app.use(require('koa-static')(config.STATIC_PATH));
-    }
+    if (config.static) app.use(require('koa-static')(config.STATIC_PATH));
     //解析请求消息, 文件上传需自行处理
     app.use(bodyParser());
     //配置日志

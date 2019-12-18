@@ -4,8 +4,7 @@ const path = require('path');
 const assert = require('assert');
 
 module.exports = (app, config) => {
-    if (config.middlewares && Array.isArray(config.middlewares) && config.middlewares.length > 0) {
-        if (! config.MIDDLEWARE_PATH) config.MIDDLEWARE_PATH = path.join(config.path, 'middlewares', config.subpath || '');
+    if (config.middlewares.length > 0) {
         for (let m of config.middlewares) {
             if (!('switch' in m) || m.switch) {
                 let file = path.join(config.MIDDLEWARE_PATH, m.file);

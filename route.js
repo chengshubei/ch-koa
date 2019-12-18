@@ -9,7 +9,6 @@ const router = require('koa-router')();
 const validators = {};
 
 module.exports = (app, config) => {
-    if (! config.ROUTE_PATH) config.ROUTE_PATH = path.join(config.path, 'routes', config.subpath || '');
     let pubPrefix = config.prefix || '';
     const fls = fs.readdirSync(config.ROUTE_PATH);
     for (let v of fls) {
@@ -21,7 +20,7 @@ module.exports = (app, config) => {
             rp = rp.replace(/\/{2,}/g, '/');
             if (r.validator) {
                 //注册路由验证器
-                assert(! validators[rp], `find validator repeated route ${path}`);
+                assert(! validators[rp], `发现重复路由: ${path}`);
                 validators[rp] = r.validator;
             }
             router[r.method.toLowerCase()](rp, r.controller);

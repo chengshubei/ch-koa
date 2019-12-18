@@ -41,7 +41,6 @@ module.exports = (app, config) => {
             }
 
             if (config.i18n && ctx.get('lang') && ctx.get('lang') !== 'zh_CN') {
-                if (! config.MESSAGE_PATH) config.MESSAGE_PATH = path.join(config.path, 'message', config.subpath || '');
                 let messagePath = path.join(config.MESSAGE_PATH, ctx.get('lang'));
                 e.message = require(messagePath)[e.code] || e.message;
             }

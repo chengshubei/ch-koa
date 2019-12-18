@@ -9,9 +9,8 @@ const defaultCfg = {
 };
 
 function logCfg(config) {
-    if ('log' in config && ! config.log) return defaultCfg;
+    if (! config.log) return defaultCfg;
     let logCfg = config.log || {};
-    if (! config.LOG_PATH) config.LOG_PATH = path.join(config.path, 'logs', config.subpath || '');
     let fileName = path.join(config.LOG_PATH, logCfg.fileName || 'app');
     let instanceFlag = '';
     if (process.env.instances && process.env.instances > 1) {
