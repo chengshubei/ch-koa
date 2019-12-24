@@ -1,15 +1,13 @@
 'use strict';
 
-const assert = require('assert');
 const path = require('path');
 const fs = require('fs');
 const _ = require('lodash');
 
 module.exports = (config) => {
-    assert(config && typeof config === 'object', 'ChKoa 配置对象为空');
-    assert(Number(config.port), '监听端口(port)未配置');
-    assert(config.path, '项目根目录(path)未配置');
     let mergeConfig = _.merge({
+        port: 6000,
+        path: path.join(__dirname, '..', '..'),
         subpath: '',
         proxy: true,
         outside: false,
@@ -30,7 +28,7 @@ module.exports = (config) => {
         ips: [],
         unips: [],
         closes: [],
-    }, config);
+    }, config || {});
     if (! mergeConfig.ROUTE_PATH) mergeConfig.ROUTE_PATH = path.join(mergeConfig.path, 'routes', mergeConfig.subpath);
     if (! mergeConfig.MIDDLEWARE_PATH) mergeConfig.MIDDLEWARE_PATH = path.join(mergeConfig.path, 'middlewares', mergeConfig.subpath);
     if (! mergeConfig.MESSAGE_PATH) mergeConfig.MESSAGE_PATH = path.join(mergeConfig.path, 'messages', mergeConfig.subpath);

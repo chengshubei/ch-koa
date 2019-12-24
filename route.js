@@ -27,10 +27,7 @@ module.exports = (app, config) => {
         }
     }
     //参数校验
-    app.use((ctx, next) => {
-        validate(ctx, validators);
-        return next();
-    });
+    app.use(validate(validators));
     //路由处理
     app.use(router.routes());
     app.use(router.allowedMethods());

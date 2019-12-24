@@ -10,6 +10,7 @@ const defaultCfg = {
 
 function logCfg(config) {
     if (! config.log) return defaultCfg;
+    
     let logCfg = config.log || {};
     let fileName = path.join(config.LOG_PATH, logCfg.fileName || 'app');
     let instanceFlag = '';

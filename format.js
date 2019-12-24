@@ -6,7 +6,6 @@ const {BaseError, SystemError, NotFoundError} = require('ch-error');
 
 const Logger = log4js.getLogger('response');
 function create(statusCode = -1, message, error, data) {
-    if (isNaN(Number(statusCode))) throw new SystemError('Status code not a number');
     let result = {};
     result.code = statusCode;
     result.data = data || null;
