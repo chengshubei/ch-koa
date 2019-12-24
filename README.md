@@ -13,7 +13,7 @@ $ npm install ch-koa
 
 ```
 const config = {
-    port: 6000,                 //对外监听端口(默认:6000)
+    port: 6001,                 //对外监听端口(默认:6001)
     path: '.',                  //项目根目录(默认:node_modules同级目录)
     subpath: '',                //应用子目录(默认:'', 没有子目录)
     proxy: true,                //是否使用反向代理(默认:true, 通过X-Forwarded-For获取客户端ip, 前面需配合Nginx)

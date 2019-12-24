@@ -6,7 +6,7 @@ const _ = require('lodash');
 
 module.exports = (config) => {
     let mergeConfig = _.merge({
-        port: 6000,
+        port: 6001,
         path: path.join(__dirname, '..', '..'),
         subpath: '',
         proxy: true,

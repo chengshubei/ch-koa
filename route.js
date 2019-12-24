@@ -16,14 +16,15 @@ module.exports = (app, config) => {
         let route = require(path.join(config.ROUTE_PATH, v));
         let prefix = route.prefix || '';
         for (let r of route.routes) {
-            let rp = `/${pubPrefix}/${prefix}/${r.path}`;
-            rp = rp.replace(/\/{2,}/g, '/');
+            let rp = `/${pubPrefix}/${prefix}/${r.path}`.replace(/\/{2,}/g, '/');
+            let method = r.method.toLowerCase();
             if (r.validator) {
                 //注册路由验证器
-                assert(! validators[rp], `发现重复路由: ${path}`);
-                validators[rp] = r.validator;
+                let uri = `${method}_${rp}`;
+                assert(! validators[uri], `发现重复路由: ${uri}`);
+                validators[uri] = r.validator;
             }
-            router[r.method.toLowerCase()](rp, r.controller);
+            router[method](rp, r.controller);
         }
     }
     //参数校验
