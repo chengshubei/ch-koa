@@ -37,7 +37,7 @@ module.exports = (config) => {
     //绑定全局变量
     global.Config = mergeConfig;
     //初始化路径
-    if (mergeConfig.static && ! fs.existsSync(config.STATIC_PATH)) fs.mkdirSync(config.STATIC_PATH, {recursive: true});
-    if (mergeConfig.log && ! fs.existsSync(config.LOG_PATH)) fs.mkdirSync(config.LOG_PATH, {recursive: true});
+    if (mergeConfig.static && ! fs.existsSync(mergeConfig.STATIC_PATH)) fs.mkdirSync(mergeConfig.STATIC_PATH, {recursive: true});
+    if (mergeConfig.log && ! fs.existsSync(mergeConfig.LOG_PATH)) fs.mkdirSync(mergeConfig.LOG_PATH, {recursive: true});
     return mergeConfig;
 };
