@@ -1,12 +1,13 @@
 'use strict';
 
-module.exports = (config) => {
+module.exports = (app, config) => {
+    if (! config.cors) return;
     config = config.cors || {};
     let origin = '*';
     if (config.origin) origin = String(config.origin);
     let maxAge = String(config.maxAge || 3600);
 
-    return function(ctx, next) {
+    app.use((ctx, next) => {
         ctx.vary('Origin');
         if (origin === '*') {
             ctx.set('Access-Control-Allow-Origin', origin);
@@ -33,5 +34,5 @@ module.exports = (config) => {
             return;
         }
         return next();
-    };
+    });
 };

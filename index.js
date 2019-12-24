@@ -3,34 +3,26 @@
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 
-const Config = require('./config');
-const Log = require('./log');
-const Cors = require('./cors');
-const Route = require('./route');
-const Filter = require('./filter');
-const Format = require('./format');
-const Middleware = require('./middleware');
-
 module.exports = (config) => {
     //检查配置
-    config = Config(config);
+    config = require('./config')(config);
     const app = new Koa(config);
-    //跨域处理
-    if (config.cors) app.use(Cors(config));
     //文件托管
     if (config.static) app.use(require('koa-static')(config.STATIC_PATH));
     //解析请求消息, 文件上传需自行处理
     app.use(bodyParser());
+    //跨域处理
+    require('./cors')(app, config);
     //配置日志
-    Log(app, config);
+    require('./log')(app, config);
     //格式化请求和响应
-    Format(app, config);
+    require('./format')(app, config);
     //注册过滤器
-    Filter(app, config);
+    require('./filter')(app, config);
     //注册中间件
-    Middleware(app, config);
+    require('./middleware')(app, config);
     //注册路由
-    Route(app, config);
+    require('./route')(app, config);
     //捕捉未处理的异常
     app.on('error', (e) => {
         global.Log.error('server error: ' + e.message || String(e));
