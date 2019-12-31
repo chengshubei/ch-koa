@@ -30,10 +30,18 @@ const config = {
         isCompress: false,          //历史是否压缩(默认:false, 不压缩. 若日志产生较多, 建议设置true, 对历史日志进行压缩保存)
         keepDays: 30                //历史日志保存天数(默认:30)
     },
+    resources: {Key: Value},    //挂载资源(默认:{}. 系统会在加载中间件, 初始任务和路由之前 将传入的资源挂载到ctx和global对象上.
+                                 eg: {Mysql: sequelize}, 再任意地方使用ctx.Mysql.getModel('user')或global.Mysql.query)
+    tasks: [{                   //初始任务配置(默认:[], 无任务)
+        file: 'token',              //任务文件名(必选)
+        switch: true,               //任务开关(默认:true)
+        single: true,               //是否开启单任务模式(默认:true, pm2集群部署的时候, 只选择NODE_APP_INSTANCE=0的进程执行)
+        AdminID: 1234               //任务自定义参数(可选)
+    }],
     middlewares: [{             //中间件配置(默认:[], 无中间件. 多个中间件按配置顺序挂载)
         file: 'token',              //中间件文件名(必选)
         switch: true,               //中间件开关(默认:true)
-        TokenName: 'Auth-Token'     //中间件参数(可选)
+        TokenName: 'Auth-Token'     //中间件自定义参数(可选)
     }],
     static: false,              //是否支持静态文件托管(默认:false)
     i18n: false,                //是否支持国际化提示(默认:false, 只支持返回程序中new ch-error中的填写的message错误提示. 
@@ -43,8 +51,9 @@ const config = {
     ips: [],                    //访问IP白名单(默认:[], 无限制)
     unips: [],                  //访问IP黑名单(默认:[]], 无限制)
     closes: [],                 //关闭的路由服务(默认:[], 都可访问)
-    ROUTE_PATH: 'path/routes[/subpath]',            //默认路由目录, 可修改
+    TASK_PATH: 'path/tasks[/subpath]',              //默认初始化任务目录, 可修改
     MIDDLEWARE_PATH: 'path/middlewares[/subpath]',  //默认中间件目录, 可修改
+    ROUTE_PATH: 'path/routes[/subpath]',            //默认路由目录, 可修改
     MESSAGE_PATH: 'path/messages[/subpath]',        //默认国际化提示目录, 可修改
     LOG_PATH: 'path/logs[/subpath]',                //默认日志目录, 可修改
     STATIC_PATH: 'path/public[/subpath]'            //默认静态文件托管目录, 可修改
@@ -77,18 +86,23 @@ module.exports = {
 };
 ```
 
-## 项目特色
+## 项目特色和注意事项
 
-1. 框架封装了丰富而实用的配置, 并提供了方便的默认选项, 见上例。 
-2. 项目依赖很少, 代码简单清晰, 便于阅读和理解。
-3. 路由模块进行了封装, 并集成了简洁的参数验证工具, 代码即文档, 后期版本更可能以此为基础加入自动生成接口文档功能。
-4. 简洁而实用的ch-validator参数验证模块, 合并了get和post参数, 在controller中推荐使用ctx.attributes来获取参数。
-5. 支持多应用功能, 通过subpath和默认目录, 在一个工程中可以方便的配置多个应用, 适合共用数据库的微服务使用, 见下例。
-6. 集成了log4js的实用配置, 并提供了debug开关, 开启时完整记录每一个返回失败(code !== 200)的请求详情。
-7. 方便的自定义中间件功能, 通过配置顺序确定先后调用。
-8. 提供了一键维护中, 关闭路由, 黑白名单, 格式化返回结果, 提示国际化等实用功能
-9. 框架经过公司核心项目的长时间运行, 可靠性A+。 
-10. 以实用和简洁为指导思想, 欢迎提交issue和想法, 合理即修改, 并且保证向前兼容。
+1. 框架封装了丰富而实用的配置, 并提供了方便的默认选项, **见上例**。 
+2. 框架会在**最开始**初始化各种配置，并将最终配置(结构如上例)挂载在全局对象上, 以便在项目的任意地方通过***global.Config***来访问。
+3. 框架以Koa2为基础上, 力求**实用**和**简洁**, 并尽量的给予使用者创建项目结构和选择模块的自由。使用者在选用了自己喜欢的模块后,
+    可以将初始化好后的资源通过 ***resources*** 选项挂载, eg: {Mysql: sequelize}, 框架将在初始化Config后**立即**对传入的资源进行
+    挂载, 因此用户可以在项目的任意地方通过 ***global.Mysql*** 或 ***ctx.Mysql*** 来访问已经统一的资源。
+4. 支持初始化任务, 任务执行顺序按照tasks中的配置顺序, 可自由开关, 可访问global.Mysql等全局资源。更实用的是, 框架提供了single选项,
+    并默认开启, 在pm2集群部署的时候, 只在NODE_APP_INSTANCE=0的进程执行, 若关闭则所有进程都执行。
+5. 简单的自定义中间件功能，按照配置文件的顺序进行先后调用, 可自由开关, 可访问ctx.Mysql等全局资源。
+6. 框架对路由模块进行了封装，秉承**代码即文档**的设计思想, 后期版本将继承自动生成接口文档功能, 路由结构**见上例**。
+7. 路由中引入了好用的参数验证工具(ch-validator), 对参数进行校验,清洗,格式化和合并, 拷贝后重新挂载在ctx上。
+    建议在controller中不区分get和post, 通过 ***ctx.attributes*** 来获取参数, 也可以通过koa2原生方式访问原始请求数据。
+8. 实用的日志配置, 依赖于log4js, 配合debug开关使用, 开启时完整记录每一个返回失败(code !== 200)的请求详情。
+9. 提供了一键维护中, 关闭路由, 黑白名单, 格式化返回结果, 提示国际化等实用功能
+10. 支持多应用功能, 通过subpath和默认目录, 在一个工程中可以方便的配置多个应用, 适合共用数据库的微服务使用, 见下例。
+
 
 #### 单应用工程目录建议 (subpath: null)
 ```
@@ -100,6 +114,8 @@ module.exports = {
 │   └── logic.js
 ├── messages
 │   └── en.js
+├── tasks
+│   └── task.js
 ├── middlewares
 │   └── token.js
 ├── models
@@ -128,6 +144,11 @@ module.exports = {
 │   │   └── en.js
 │   └── manager
 │       └── en.js
+├── tasks
+|   ├── application
+│   │   └── timeout.js
+│   └── manager
+│       └── everyday.js
 ├── middlewares
 |   ├── application
 │   │   └── token.js
@@ -150,7 +171,10 @@ module.exports = {
 
 #### 友情提示
 
-项目依赖了自己封装的ch-error和ch-validator模块, 同样欢迎提供意见。
+框架依赖了自己封装的ch-error和ch-validator模块, 同样欢迎提供意见。
+框架依赖很少, 代码简单明晰, 易于阅读和理解。
+框架经过公司核心项目的长时间运行, 可靠性有保证。
+欢迎大家提交issue和想法, 也可联系我的邮箱1246691129@qq.com, 合理的意见都可以修改, 并保证向前兼容。
 
 ## Questions & Suggestions
 

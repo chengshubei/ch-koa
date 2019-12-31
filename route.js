@@ -9,6 +9,12 @@ const router = require('koa-router')();
 const validators = {};
 
 module.exports = (app, config) => {
+    //挂载资源
+    app.use((ctx, next) => {
+        for (let k in config.resources) ctx[k] = config.resources[k];
+        return next();
+    });
+    //解析路由配置
     let pubPrefix = config.prefix || '';
     const fls = fs.readdirSync(config.ROUTE_PATH);
     for (let v of fls) {

@@ -1,6 +1,6 @@
 {
   "name": "ch-koa",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "基于Koa2的简单易用的web框架, 对常用的基础需求，进行了封装和配置",
   "main": "index.js",
   "scripts": {

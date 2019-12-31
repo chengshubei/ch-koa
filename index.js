@@ -15,6 +15,8 @@ module.exports = (config) => {
     require('./cors')(app, config);
     //配置日志
     require('./log')(app, config);
+    //开启初始化任务
+    require('./task')(config);
     //格式化请求和响应
     require('./format')(app, config);
     //注册过滤器
