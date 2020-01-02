@@ -15,29 +15,33 @@ module.exports = (app, config) => {
         return next();
     });
     //解析路由配置
-    let pubPrefix = config.prefix || '';
-    const fls = fs.readdirSync(config.ROUTE_PATH);
-    for (let v of fls) {
-        if (v.slice(-3) !== '.js') continue;
-        let route = require(path.join(config.ROUTE_PATH, v));
-        let prefix = route.prefix || '';
-        for (let r of route.routes) {
-            let rp = `/${pubPrefix}/${prefix}/${r.path}`.replace(/\/{2,}/g, '/');
-            let method = r.method.toLowerCase();
-            if (r.validator) {
-                //注册路由验证器
-                let uri = `${method}_${rp}`;
-                assert(! validators[uri], `发现重复路由: ${uri}`);
-                validators[uri] = r.validator;
+    if (fs.existsSync(config.ROUTE_PATH)) {
+        let pubPrefix = config.prefix || '';
+        const fls = fs.readdirSync(config.ROUTE_PATH);
+        for (let v of fls) {
+            if (v.slice(-3) !== '.js') continue;
+            let route = require(path.join(config.ROUTE_PATH, v));
+            let prefix = route.prefix || '';
+            for (let r of route.routes) {
+                let rp = `/${pubPrefix}/${prefix}/${r.path}`.replace(/\/{2,}/g, '/');
+                let method = r.method.toLowerCase();
+                if (r.validator) {
+                    //注册路由验证器
+                    let uri = `${method}_${rp}`;
+                    assert(! validators[uri], `发现重复路由: ${uri}`);
+                    validators[uri] = r.validator;
+                }
+                router[method](rp, r.controller);
             }
-            router[method](rp, r.controller);
         }
+        //参数校验
+        app.use(validate(validators));
+        //路由处理
+        app.use(router.routes());
+        app.use(router.allowedMethods());
+    } else {
+        global.Log.warn(`路由目录${config.ROUTE_PATH}不可用, 未监听路由.`);
     }
-    //参数校验
-    app.use(validate(validators));
-    //路由处理
-    app.use(router.routes());
-    app.use(router.allowedMethods());
     //404处理
     app.use(() => {throw new NotFoundError();});
 };
