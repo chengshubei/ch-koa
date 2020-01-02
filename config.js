@@ -34,6 +34,7 @@ module.exports = (config) => {
     if (! mergeConfig.TASK_PATH) mergeConfig.TASK_PATH = path.join(mergeConfig.path, 'tasks', mergeConfig.subpath);
     if (! mergeConfig.MIDDLEWARE_PATH) mergeConfig.MIDDLEWARE_PATH = path.join(mergeConfig.path, 'middlewares', mergeConfig.subpath);
     if (! mergeConfig.ROUTE_PATH) mergeConfig.ROUTE_PATH = path.join(mergeConfig.path, 'routes', mergeConfig.subpath);
+    if (! mergeConfig.CONTROLLER_PATH) mergeConfig.CONTROLLER_PATH = path.join(mergeConfig.path, 'controllers', mergeConfig.subpath);
     if (! mergeConfig.MESSAGE_PATH) mergeConfig.MESSAGE_PATH = path.join(mergeConfig.path, 'messages', mergeConfig.subpath);
     if (! mergeConfig.LOG_PATH) mergeConfig.LOG_PATH = path.join(mergeConfig.path, 'logs', mergeConfig.subpath);
     if (! mergeConfig.STATIC_PATH) mergeConfig.STATIC_PATH = path.join(mergeConfig.path, 'public', mergeConfig.subpath);
