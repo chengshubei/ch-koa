@@ -11,6 +11,8 @@ module.exports = (config) => {
     if (config.static) app.use(require('koa-static')(config.STATIC_PATH));
     //解析请求消息, 文件上传需自行处理
     app.use(bodyParser());
+    //挂载资源
+    require('./resource')(app, config);
     //跨域处理
     require('./cors')(app, config);
     //配置日志

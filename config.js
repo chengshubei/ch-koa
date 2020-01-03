@@ -38,10 +38,6 @@ module.exports = (config) => {
     if (! mergeConfig.MESSAGE_PATH) mergeConfig.MESSAGE_PATH = path.join(mergeConfig.path, 'messages', mergeConfig.subpath);
     if (! mergeConfig.LOG_PATH) mergeConfig.LOG_PATH = path.join(mergeConfig.path, 'logs', mergeConfig.subpath);
     if (! mergeConfig.STATIC_PATH) mergeConfig.STATIC_PATH = path.join(mergeConfig.path, 'public', mergeConfig.subpath);
-    //绑定全局变量
-    global.Config = mergeConfig;
-    //挂载全局资源
-    for (let k in mergeConfig.resources) global[k] = mergeConfig.resources[k];
     //初始化路径
     if (mergeConfig.static && ! fs.existsSync(mergeConfig.STATIC_PATH)) fs.mkdirSync(mergeConfig.STATIC_PATH, {recursive: true});
     if (mergeConfig.log && ! fs.existsSync(mergeConfig.LOG_PATH)) fs.mkdirSync(mergeConfig.LOG_PATH, {recursive: true});
