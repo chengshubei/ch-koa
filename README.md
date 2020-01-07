@@ -115,7 +115,7 @@ module.exports = {
 12. 框架默认目录包括: .(项目根目录), tasks, middlewares, routes, controllers, messages, logs, public, 
     通过对应的config选项都可以进行修改, 不使用的目录允许是不存在的目录。
     logs和public目录不存在时会自动创建, 如不使用可以设置flase关闭相应选项。
-13. 框架资源加载顺序: config => resources => controllers => tasks => middlewars => routes。
+13. 框架资源加载顺序: config => resources => controllers => tasks => middlewars => routes。  
     绑定(global和ctx)资源的顺序: AppConfig => Mysql/Redis... => Controller。 
 14. 推荐工程目录见下。
 

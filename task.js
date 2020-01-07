@@ -12,7 +12,7 @@ module.exports = (config) => {
                         if (process.env.NODE_APP_INSTANCE > 0) continue;
                     }
                 }
-                let file = path.join(config.MIDDLEWARE_PATH, t.file);
+                let file = path.join(config.TASK_PATH, t.file);
                 require(file)(t);
             }
         }
