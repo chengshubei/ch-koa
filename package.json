@@ -1,6 +1,6 @@
 {
   "name": "ch-koa",
-  "version": "1.1.15",
+  "version": "1.2.0",
   "description": "基于Koa2的简单易用的web框架, 对常用的基础需求，进行了封装和配置",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   "homepage": "https://github.com/chengshubei/ch-koa#readme",
   "dependencies": {
     "ch-error": "^1.0.1",
-    "ch-validator": "^1.1.6",
+    "ch-validator": "^1.2.0",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
