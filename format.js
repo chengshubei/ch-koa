@@ -1,12 +1,23 @@
 'use strict';
 
 const path = require('path');
+const fs = require('fs');
 const log4js = require('log4js');
 const {BaseError, SystemError, NotFoundError} = require('ch-error');
 
 const Logger = log4js.getLogger('response');
 
 module.exports = (app, config) => {
+    const Message = {};
+    if (config.i18n) {
+        const fls = fs.readdirSync(config.MESSAGE_PATH);
+        for (let v of fls) {
+            if (v.slice(-3) !== '.js') continue;
+            let name = v.slice(0, -3);
+            Message[name] = require(path.join(config.MESSAGE_PATH, v));
+        }
+    }
+
     app.use(async (ctx, next) => {
         try {
             ctx.body = {
@@ -29,8 +40,8 @@ module.exports = (app, config) => {
             }
 
             if (config.i18n && ctx.get('lang') && ctx.get('lang') !== 'zh_CN') {
-                let messagePath = path.join(config.MESSAGE_PATH, ctx.get('lang'));
-                e.message = require(messagePath)[e.code] || e.message;
+                let language = Message[ctx.get('lang')];
+                e.message = language[e.code] || e.message;
             }
             let response = {
                 code: e.code || 500,

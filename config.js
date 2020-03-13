@@ -4,11 +4,13 @@ const path = require('path');
 const fs = require('fs');
 const _ = require('lodash');
 
-module.exports = (config) => {
-    let mergeConfig = _.merge({
+module.exports = (config = {}) => {
+    const projectPath = config.path || path.join(__dirname, '..', '..');
+    const subpath = config.subpath || '';
+    const Config = _.merge({
         port: 6001,
-        path: path.join(__dirname, '..', '..'),
-        subpath: '',
+        path: projectPath,
+        subpath: subpath,
         proxy: true,
         outside: false,
         debug: false,
@@ -30,16 +32,17 @@ module.exports = (config) => {
         ips: [],
         unips: [],
         closes: [],
-    }, config || {});
-    if (! mergeConfig.TASK_PATH) mergeConfig.TASK_PATH = path.join(mergeConfig.path, 'tasks', mergeConfig.subpath);
-    if (! mergeConfig.MIDDLEWARE_PATH) mergeConfig.MIDDLEWARE_PATH = path.join(mergeConfig.path, 'middlewares', mergeConfig.subpath);
-    if (! mergeConfig.ROUTE_PATH) mergeConfig.ROUTE_PATH = path.join(mergeConfig.path, 'routes', mergeConfig.subpath);
-    if (! mergeConfig.CONTROLLER_PATH) mergeConfig.CONTROLLER_PATH = path.join(mergeConfig.path, 'controllers', mergeConfig.subpath);
-    if (! mergeConfig.MESSAGE_PATH) mergeConfig.MESSAGE_PATH = path.join(mergeConfig.path, 'messages', mergeConfig.subpath);
-    if (! mergeConfig.LOG_PATH) mergeConfig.LOG_PATH = path.join(mergeConfig.path, 'logs', mergeConfig.subpath);
-    if (! mergeConfig.STATIC_PATH) mergeConfig.STATIC_PATH = path.join(mergeConfig.path, 'public', mergeConfig.subpath);
+        CONTROLLER_PATH: path.join(projectPath, 'controllers', subpath),
+        TASK_PATH: path.join(projectPath, 'tasks', subpath),
+        MIDDLEWARE_PATH: path.join(projectPath, 'middlewares', subpath),
+        ROUTE_PATH: path.join(projectPath, 'routes', subpath),
+        MESSAGE_PATH: path.join(projectPath, 'messages', subpath),
+        LOG_PATH: path.join(projectPath, 'logs', subpath),
+        STATIC_PATH: path.join(projectPath, 'public', subpath),
+    }, config);
+
     //初始化路径
-    if (mergeConfig.static && ! fs.existsSync(mergeConfig.STATIC_PATH)) fs.mkdirSync(mergeConfig.STATIC_PATH, {recursive: true});
-    if (mergeConfig.log && ! fs.existsSync(mergeConfig.LOG_PATH)) fs.mkdirSync(mergeConfig.LOG_PATH, {recursive: true});
-    return mergeConfig;
+    if (Config.static && ! fs.existsSync(Config.STATIC_PATH)) fs.mkdirSync(Config.STATIC_PATH, {recursive: true});
+    if (Config.log && ! fs.existsSync(Config.LOG_PATH)) fs.mkdirSync(Config.LOG_PATH, {recursive: true});
+    return Config;
 };
